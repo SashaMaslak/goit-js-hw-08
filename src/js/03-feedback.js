@@ -8,58 +8,47 @@ const inputEmail = document.querySelector('[name="email"]');
 const inputTextArea = document.querySelector('[name="message"]');
 
 form.addEventListener('submit', sendForm);
-inputEmail.addEventListener('input', throttle(onCurrentInput1, 500));
-inputTextArea.addEventListener('input', throttle(onCurrentInput2, 500));
+form.addEventListener('input', throttle(onCurrentInput, 500));
 
-const formLocalStorageData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+resetForm();
 
-if(formLocalStorageData) {
-if (formLocalStorageData.email) {
-   inputEmail.value = formLocalStorageData.email;
-};
-if (formLocalStorageData.message) {
-   inputTextArea.value = formLocalStorageData.message;
-};}
-
-function onCurrentInput1(e) {
-   e.preventDefault();
-   if (e.target === inputEmail) {
-      INFO_INPUT.email = e.target.value;
-   };
-   localStorage.setItem(STORAGE_KEY, JSON.stringify(INFO_INPUT));
-   if(formLocalStorageData) {
-      if (formLocalStorageData.message) {
-         INFO_INPUT.message = formLocalStorageData.message;
-      };
-   };
-};
-
-function onCurrentInput2(e) {
-   e.preventDefault();
-   if (e.target === inputTextArea) {
-      INFO_INPUT.message = e.target.value;
-   };
-   localStorage.setItem(STORAGE_KEY, JSON.stringify(INFO_INPUT));
-   if(formLocalStorageData) {
-      if (formLocalStorageData.email) {
-         INFO_INPUT.email = formLocalStorageData.email;
-      };
-   };
-};
+// const formLocalStorageData = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
 function sendForm(e) {
    e.preventDefault();
    if (inputEmail.value === '' || inputTextArea.value === '') {
     return console.log('Please fill in all the fields!');
   } else {
-   
    e.currentTarget.reset();
    localStorage.removeItem(STORAGE_KEY);
-   console.log(`Form sent, your email: ${INFO_INPUT.email}, and your message: ${INFO_INPUT.message}`);
-   inputEmail.value = '';
-      inputTextArea.value = '';
-      }
+      console.log(INFO_INPUT);
+      INFO_INPUT.email = '';
+      INFO_INPUT.message = '';
+   // inputEmail.value = '';
+   // inputTextArea.value = '';
+   }
 };
+
+function onCurrentInput(e) {
+   INFO_INPUT[e.target.name] = e.target.value;
+   localStorage.setItem(STORAGE_KEY, JSON.stringify(INFO_INPUT));
+};
+
+function resetForm() {
+    const savedINFO_INPUT = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+    if (savedINFO_INPUT) {
+       inputEmail.value = savedINFO_INPUT['email']
+          ? savedINFO_INPUT['email'] : '';
+       inputTextArea.value = savedINFO_INPUT['message']
+          ? savedINFO_INPUT['message'] : '';
+
+        INFO_INPUT.email = inputEmail.value;
+        INFO_INPUT.message = inputTextArea.value;
+    }
+}
+
+
 
 
 
